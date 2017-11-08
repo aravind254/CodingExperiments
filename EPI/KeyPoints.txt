@@ -1,0 +1,8 @@
+PrimitiveTypes Chapter4
+==========================
+1) Reset  the lowermost set Bit  x&(x-1)
+2) Extract the lowermost set Bit  x&~(x-1)
+3) To Swap a bit XOR with 1 ( 0 ^1 = 1, 1^1 = 0)
+4) To Forward the rightmost set bit  x | (x-1)
+5) Last n bits will be the reminder when doing the modulo operation with 2^n
+6) To Check if x is Power of 2 !(x & (x-1))
