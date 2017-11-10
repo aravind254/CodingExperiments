@@ -11,5 +11,6 @@ PrimitiveTypes Chapter4
    Commutative A+B = B+A
 8) Consider using cached results when trying to improve Time Complexity of Bit related problems.
    Examples: Reverse Bits in an integer, Parity of a number.
-9) When working with Bitwise operators be mindful of precedence. Just to be safe include parentheses wherever possible to avoid any issues caused by precedence of operators.
+9) When working with Bitwise operators be mindful of precedence. 
+   Just to be safe include parentheses wherever possible to avoid any issues caused by precedence of operators.
  
