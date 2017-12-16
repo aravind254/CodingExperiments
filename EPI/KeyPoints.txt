@@ -14,3 +14,7 @@ PrimitiveTypes Chapter4
 9) When working with Bitwise operators be mindful of precedence. 
    Just to be safe include parentheses wherever possible to avoid any issues caused by precedence of operators.
  
+Arrays Chapter5
+=======================
+1) Numbers > 1 and divisible only by itself is a prime number.
+To test if A is a prime number you need to check if it is divisible by any of the numbers from 2 to sqrt(A)
