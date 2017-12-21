@@ -1,11 +1,8 @@
 #include<iostream>
-#include<vector>
-#include "arrUtil.h"
+#include<string>
 
 using namespace std;
 
 int main()
 {
-
-
 }
