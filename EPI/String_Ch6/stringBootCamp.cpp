@@ -50,4 +50,10 @@ cout << "test2 after insert = " << test2 << endl;
 // Reverse a string
 reverse(test3.begin(),test3.end());
 cout << "test3 after reverse = " << test3 << endl;
+
+// isalnum,isupper,islower,isalpha,isdigit
+// tolower, toupper
+
+
+
 }
