@@ -1,7 +1,5 @@
 #include<iostream>
 #include<memory> // shared_ptr
-#include<list> // refers to doubly linked list
-#include<forward_list> // refers to singly linked list
 
 using namespace std;
 
