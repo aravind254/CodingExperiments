@@ -92,7 +92,7 @@ bool LL<T>::insertElementAfterPos(int pos,T elem)
 template <typename T>
 void LL<T>::print()
 {
-  if(!head) { return;}
+  if(!head) {std::cout << "List is empty" << std::endl; return;}
   shared_ptr<ListNode<T>> currNode = head;
   
    while(currNode)
@@ -101,4 +101,23 @@ void LL<T>::print()
       currNode = currNode->next;
    }
    cout << endl;
+}
+
+
+template <typename T>
+bool LL<T>::add(shared_ptr<ListNode<T>>& newNode)
+{
+ if(!head) {
+   head = newNode;
+   return true;
+  }
+
+ shared_ptr<ListNode<T>> currNode = head;
+ while(currNode->next != nullptr)
+ {
+   currNode = currNode->next;
+ }
+
+ currNode->next = newNode;
+ return true;
 }

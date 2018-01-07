@@ -19,13 +19,12 @@ class LL
 {
   public:
   bool add(T elem);
+  bool add(std::shared_ptr<ListNode<T>>& node);
   bool findElement(T elem);
   bool Delete(T elem);
   bool insertElementAfterPos(int pos,T elem);
   void print();
-
-  private:
-  std::shared_ptr<ListNode<T>> head;
+  std::shared_ptr<ListNode<T>> head; // For Simplicity and ease of use making this public
 };
 
 #include "LL.cpp"
