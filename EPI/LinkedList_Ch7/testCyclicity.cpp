@@ -3,6 +3,39 @@ using namespace std;
 
 typedef std::shared_ptr<ListNode<int>> ln;
 
+
+// Find start of cycle without finding lenght of the cycle
+// fast & slow pointers may meet at any node in the cycle
+ln testCyclicityNoLength(const LL<int> &list)
+{
+  ln fPtr = list.head,sPtr = list.head;
+ while(fPtr)
+ {
+   fPtr=fPtr->next;
+   if(!fPtr){
+    return nullptr;
+   }
+   fPtr=fPtr->next;
+   if(!fPtr){
+    return nullptr;
+   }
+  sPtr = sPtr->next;
+  if(fPtr == sPtr){
+  cout << "Found a cycle" << endl;
+
+  sPtr = list.head;
+  while(sPtr != fPtr)
+  {
+    fPtr = fPtr->next;
+    sPtr = sPtr->next;
+  }
+  cout << "start of cycle is " << fPtr->data << endl;
+  return fPtr;
+   }
+}
+  return nullptr;
+}
+
 ln testCyclicity(const LL<int> &list)
 {
  ln fPtr = list.head,sPtr = list.head;
@@ -80,5 +113,7 @@ int main()
  if(!node){
   cout << "Cycle not found" << endl;
  }
+
+ testCyclicityNoLength(myList);
   
 }
