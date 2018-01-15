@@ -18,3 +18,8 @@ Arrays Chapter5
 =======================
 1) Numbers > 1 and divisible only by itself is a prime number.
 To test if A is a prime number you need to check if it is divisible by any of the numbers from 2 to sqrt(A)
+
+
+LinkedList Chapter 7
+=====================
+1) Use Fast, Slow pointers to detect the first half and second half of the list. Slow will endup pointing to the first node in the second half of the list
