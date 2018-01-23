@@ -28,3 +28,9 @@ Strings
 LinkedList Chapter 7
 =====================
 1) Use Fast, Slow pointers to detect the first half and second half of the list. Slow will endup pointing to the first node in the second half of the list
+
+
+Stack & Queue Chapter 8
+========================
+1) rotate vector API is useful for circular queue implementation.  std::rotate(myvector.begin(),myvector.begin()+3,myvector.end());
+2) Implement Stack with Max, key is to store max along with data. To further improve space complexity, you can have an additional stack to store the max.
