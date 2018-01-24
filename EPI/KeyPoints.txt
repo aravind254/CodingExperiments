@@ -21,7 +21,7 @@ To test if A is a prime number you need to check if it is divisible by any of th
 
 Strings 
 =======
-1) How to split a string based on delimiter? Convert string to stringstream and use std::getline.
+1) How to split a string based on delimiter? Convert string to stringstream and use std::getline(stream& getline (istream& is, string& str, char delim);).
 
 
 
