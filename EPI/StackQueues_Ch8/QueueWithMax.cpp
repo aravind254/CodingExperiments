@@ -29,10 +29,11 @@ class Queue
         return;
      }
 
-     if(Q.top() == dq.back())
+     if(Q.front() == dq.front())
      {
-        dq.pop_back(); 
+        dq.pop_front(); 
      }
+     cout << "Q pop," << Q.front() << endl;
      Q.pop(); 
   }
 
@@ -43,17 +44,33 @@ class Queue
 
   int max() 
   {
-     dq.front();
+     return dq.front();
   }
 
  private:
  queue<int> Q;
  deque<int> dq;
-}
+};
 
 
 int main()
 {
-  
-   
+  Queue myQ;
+  myQ.enqueue(10);
+  myQ.enqueue(9);
+  myQ.enqueue(8);
+  myQ.enqueue(7);
+  myQ.enqueue(11);
+  myQ.enqueue(5);
+  myQ.enqueue(4);
+  myQ.enqueue(3);
+  myQ.enqueue(2);
+  myQ.enqueue(1);
+  cout << "max," <<myQ.max() << endl;
+  myQ.dequeue();
+  myQ.dequeue();
+  myQ.dequeue();
+  myQ.dequeue();
+  myQ.dequeue();
+  cout << "max," <<myQ.max() << endl;
 }
