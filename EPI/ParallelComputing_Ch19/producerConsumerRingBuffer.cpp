@@ -79,6 +79,8 @@ int main()
 {
   thread p1(producer);
   thread c1(consumer);
+  thread c2(consumer);
   p1.join();
   c1.join();
+  c2.join();
 }

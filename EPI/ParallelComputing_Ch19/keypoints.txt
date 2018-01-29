@@ -1,0 +1,55 @@
+Key Concetps to Know
+======================
+1) Reentrant, Thread Safe
+2) Priority inversion,Priority inheritance
+3) Condition variable
+4) SpinLock, LiveLock, Deadlock
+5) Binary Semaphore, Mutex, Counting Semaphore
+6) Recursive mutex ( Sense of ownership, Kernel can increase priority of the thread holding the recursive mutex)
+
+mutex - supports recursion, and optionally priority inheritance
+binary semaphore - no recursion, no inheritance, simple exclusion, taker and giver does not have to be same thread, broadcast release available
+counting semaphore - no recursion or inheritance, acts as a coherent resource counter from any desired initial count, threads only block where net count against the 
+
+
+Mutual Exclusion Semaphores
+===========================
+Mutual Exclusion semaphores are used to protect shared resources (data structure, file, etc..).
+
+A Mutex semaphore is "owned" by the task that takes it. If Task B attempts to semGive a mutex currently held by Task A, Task B's call will return an error and fail.
+
+Mutexes always use the following sequence:
+
+  - SemTake
+  - Critical Section
+  - SemGive
+Here is a simple example:
+
+  Thread A                     Thread B
+   Take Mutex
+     access data
+     ...                        Take Mutex  <== Will block
+     ...
+   Give Mutex                     access data  <== Unblocks
+                                  ...
+                                Give Mutex
+Binary Semaphore
+================
+Binary Semaphore address a totally different question:
+
+Task B is pended waiting for something to happen (a sensor being tripped for example).
+Sensor Trips and an Interrupt Service Routine runs. It needs to notify a task of the trip.
+Task B should run and take appropriate actions for the sensor trip. Then go back to waiting.
+
+   Task A                      Task B
+   ...                         Take BinSemaphore   <== wait for something
+   Do Something Noteworthy
+   Give BinSemaphore           do something    <== unblocks
+Note that with a binary semaphore, it is OK for B to take the semaphore and A to give it.
+Again, a binary semaphore is NOT protecting a resource from access. The act of Giving and Taking a semaphore are fundamentally decoupled.
+It typically makes little sense for the same task to so a give and a take on the same binary semaphore.
+
+
+
+
+
