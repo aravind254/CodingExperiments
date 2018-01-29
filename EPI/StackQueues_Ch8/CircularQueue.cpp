@@ -6,10 +6,8 @@ using namespace std;
 class CQueue
 { 
  public:
- CQueue(int n)
+ CQueue(int n):data(n)
  {
-   mSize = n;
-   data.reserve(mSize);
    cout << "Capacity of Queue is " << data.capacity() << endl;
    cout << "Size of Queue is " << data.size() << endl;
  }
@@ -18,27 +16,33 @@ class CQueue
  // If reached max capacity of Queue, increase QueueSize
  void pushSpecial(int val)
  {
-   if(curSize == data.capacity()){
-   cout << "Reached Queue capacity.Resize Queue" << endl;
+   
+   cout << "curSize,"<<curSize<<"vector size,"<<data.size()<< endl;
+   cout << "capacity,"<<data.capacity()<< endl;
+   if(curSize && (curSize == data.size())){
+   cout << "Reached Queue Size"<< endl;
    rotate(data.begin(),data.begin()+head,data.end());
    head = 0;
-   tail = mSize;
-   data.resize(mSize * kScaleFactor);
+   //cout << "head after resize = " << data[head] << endl;
+   tail = data.size();
+   //cout << "last after resize = " << data[tail-1] << endl;
+   data.resize(data.size() * kScaleFactor);
    }
+   //cout << "head  " << data[head] << endl;
    cout << "Push val,"<< val <<",at " << tail << endl;   
    data[tail] = val;
-   tail=(tail+1)%(data.capacity());; 
+   tail=(tail+1)%(data.size());; 
    curSize++;
  }
  
  void push(int val)
  {
-   if(curSize == mSize){
+   if(curSize == data.size()){
    throw length_error("Queue is full");
    }
    cout << "Push val,"<< val <<",at " << tail << endl;   
    data[tail] = val;
-   tail=(tail+1)%(data.capacity()); 
+   tail=(tail+1)%(data.size()); 
    curSize++;
  }
  
@@ -47,8 +51,8 @@ class CQueue
     if(!curSize){
     throw length_error("Queue is empty");
     }
-    cout << "Pop val,"<< data[head] <<",from " << head << endl;   
-    head=(head+1)%(data.capacity());
+    cout << "Pop val," << data[0] <<",from " << head << endl;   
+    head=(head+1)%(data.size());
     curSize--;
  }
 
@@ -69,7 +73,6 @@ class CQueue
  private:
  vector<int> data;
  int curSize = 0;
- int mSize = 0;
  int head = 0,tail = 0;
  const int kScaleFactor = 2;
 };
