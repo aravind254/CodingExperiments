@@ -1,6 +1,7 @@
 #include<iostream>
 #include<memory>
 #include<queue>
+#include<stack>
 
 using namespace std;
 
@@ -25,11 +26,15 @@ bool isPerfectBinaryTree();
 void inOrder();
 void preOrder();
 void postOrder();
+void inOrderIterative();
+void preOrderIterative();
+void postOrderIterative();
 bool isSymmetric();
 
 std::unique_ptr<TreeNode<T>> root=nullptr; // For the sake of simplicity making this info public
 
 private:
+int  heightHelper(const std::unique_ptr<TreeNode<T>>&,int);
 void inOrderHelper(const std::unique_ptr<TreeNode<T>>&);
 void preOrderHelper(const std::unique_ptr<TreeNode<T>>&);
 void postOrderHelper(const std::unique_ptr<TreeNode<T>>&);
@@ -88,6 +93,34 @@ void Tree<T>::inOrderHelper(const unique_ptr<TreeNode<T>>& curNode)
 }
 
 template <typename T>
+void Tree<T>::inOrderIterative()
+{
+    stack<TreeNode<T>*> myStack;
+    myStack.emplace(root.get());
+    TreeNode<T>* temp = nullptr; 
+    cout << "inOrderIterative" << endl;
+    while(!myStack.empty())
+    {
+       temp = myStack.top(); 
+       if(temp)
+       {
+           myStack.emplace(temp->left.get());
+       }
+       else
+       {
+           myStack.pop();
+           if(myStack.empty()) { break;}
+           temp = myStack.top();
+           myStack.pop();
+           cout << temp->data << " ";
+           myStack.emplace(temp->right.get());
+       } 
+    }
+   cout << endl;
+
+}
+
+template <typename T>
 void Tree<T>::preOrder()
 {
   cout << "preOrder" << endl;
@@ -103,6 +136,34 @@ void Tree<T>::preOrderHelper(const unique_ptr<TreeNode<T>>& curNode)
     cout << curNode->data << " ";
     preOrderHelper(curNode->left);
     preOrderHelper(curNode->right);
+}
+
+template <typename T>
+void Tree<T>::preOrderIterative()
+{   
+    cout << "preOrderIterative" << endl;
+    stack<TreeNode<T>*> myStack;
+    myStack.emplace(root.get());
+    TreeNode<T>* temp = nullptr;  
+    while(!myStack.empty())
+    {  
+       temp = myStack.top();
+       if(temp)
+       {
+           cout << temp->data << " ";   
+           myStack.emplace(temp->left.get());
+       }
+       else
+       {   
+           myStack.pop();
+           if(myStack.empty()) { break;}
+           temp = myStack.top();
+           myStack.pop();
+           myStack.emplace(temp->right.get());
+       }
+    }
+   cout << endl;
+
 }
 
 template <typename T>
@@ -124,6 +185,13 @@ void Tree<T>::postOrderHelper(const unique_ptr<TreeNode<T>>& curNode)
 }
 
 template <typename T>
+void Tree<T>::postOrderIterative()
+{  
+    cout << "postOrderIterative" << endl;
+
+}
+
+template <typename T>
 void Tree<T>::remove(T val)
 {
 }
@@ -131,6 +199,19 @@ void Tree<T>::remove(T val)
 template <typename T>
 int Tree<T>::height()
 {
+   int ht  =  heightHelper(root,-1);
+   cout << "height = " << ht << endl;
+   return ht;
+}
+
+template <typename T>
+int Tree<T>::heightHelper(const std::unique_ptr<TreeNode<T>> &curNode,int depth)
+{
+ if(!curNode) { return depth;}
+ depth++;
+ int ld = heightHelper(curNode->left,depth);
+ int rd = heightHelper(curNode->right,depth);
+ return ld>rd?ld:rd;
 }
 
 template <typename T>
@@ -168,7 +249,11 @@ int main()
  myTree.add(1);
  myTree.add(6);
  myTree.add(7);
+ myTree.add(8);
  myTree.inOrder();
+ myTree.inOrderIterative();
  myTree.preOrder();
+ myTree.preOrderIterative();
  myTree.postOrder();
+ myTree.height();
 }
