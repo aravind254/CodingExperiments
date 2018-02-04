@@ -1,0 +1,9 @@
+std::priority_queue implements heap
+
+Heaps can be used to 
+1) To sort a k sorted array(each element is at most k away from its correct position). 
+2) To Find k largest(use minHeap) or k smallest(max Heap) from a incoming stream.
+3) To Merge multiple sorted arrays.
+
+
+

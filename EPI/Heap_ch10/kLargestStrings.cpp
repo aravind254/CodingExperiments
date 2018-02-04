@@ -11,6 +11,9 @@ bool compareSize(string a,string b)
   return (a.size() > b.size());
 }
 
+// TimeComplexity : o(nlogk), n is the size of the stringStream
+// SpaceComplexity: o(k)
+
 void kLargestStrings(const vector<string> &stringStream,int k)
 {
    vector<string> result;
