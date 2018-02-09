@@ -1,0 +1,11 @@
+1)Virtual Memory, Page fault
+2)Interrupt handler. Using semaphore,mutex in interrupts
+3)How would you implement semaphores / mutexes in interrupt handlers ?
+4)Implement strstr,sprintf
+5)Paging, Segmentation, DMA
+6)How does malloc work?
+7)C macro questions
+8)Bit Manipulations
+9)Volatile keyword
+
+ 

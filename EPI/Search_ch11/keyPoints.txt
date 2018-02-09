@@ -1,1 +1,2 @@
 1) For Binary search to find middle element don't do (l + u )/2. This will result in overflow, instead do m = l + (u-l)/2
+2) When searching large files, bitset might be useful

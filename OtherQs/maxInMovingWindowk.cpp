@@ -1,0 +1,3 @@
+/*
+Find all the max elemnets in a moving window of size k of given array
+*/
