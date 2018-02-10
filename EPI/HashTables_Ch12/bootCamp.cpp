@@ -36,6 +36,25 @@ int main()
      cout << it->first << " " << it->second << endl;
   }
 
+  // Find a value in a map
+  if(myMap.find("Krover") != myMap.end())
+  {
+    cout << "Found Krover" << endl; 
+  }
+
+  // Erase a value from Map
+   myMap.erase("Krover");
+  cout << "Erase Krover" << endl;
+
+  if(myMap.find("Krover") != myMap.end())
+  {
+    cout << "Found Krover" << endl; 
+  }
+  else
+  {
+    cout << "Krover Not Found" << endl; 
+  }
+
   cout << "**CUSTOM MAP HASH**" << endl;
   unordered_map<string,int,customHash> myMap2;
   myMap2.insert({"James",0});
