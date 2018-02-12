@@ -41,3 +41,13 @@ Stack & Queue Chapter 8
 ========================
 1) rotate vector API is useful for circular queue implementation.  std::rotate(myvector.begin(),myvector.begin()+3,myvector.end());
 2) Implement Stack with Max, key is to store max along with data. To further improve space complexity, you can have an additional stack to store the max.
+
+
+HashTable
+=========
+1) For unordered_map there is no method to get the keys (for example there is no keys()).
+for(auto kv : myMap)
+{
+  // kv.first is the key
+  // kv.seond is the value
+}
