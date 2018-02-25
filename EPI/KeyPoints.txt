@@ -26,6 +26,13 @@ Arrays Chapter5
 1) Numbers > 1 and divisible only by itself is a prime number.
 To test if A is a prime number you need to check if it is divisible by any of the numbers from 2 to sqrt(A)
 
+Vectors
+=======
+1) vector<int> A;
+ vector<vector<int>> B;
+B.emplace_back(A.cbegin()+0, A.cbegin() + 5); // insert elemnets in A from index 0 to 4 in one row of B
+B.emplace_back(A.crbegin() + A.size() - 5 , A.crbegin() + A.size() - 0); // insert elements in A from index 0 to 4 in reverse direction, in a another row of B
+
 Strings 
 =======
 1) How to split a string based on delimiter? Convert string to stringstream and use std::getline(stream& getline (istream& is, string& str, char delim);).
@@ -41,6 +48,8 @@ Stack & Queue Chapter 8
 ========================
 1) rotate vector API is useful for circular queue implementation.  std::rotate(myvector.begin(),myvector.begin()+3,myvector.end());
 2) Implement Stack with Max, key is to store max along with data. To further improve space complexity, you can have an additional stack to store the max.
+
+
 
 
 HashTable

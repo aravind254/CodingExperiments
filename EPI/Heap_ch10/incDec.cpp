@@ -54,53 +54,36 @@ vector<int> mergeSortedSequence(vector<vector<int>> sequence)
   return result;  
 }
 
+vector<vector<int>> SortKIncreasingDecreasingArray(const vector<int>& A) {
+  // Decomposes A into a set of sorted arrays.
+  vector<vector<int>> sorted_subarrays;
+  typedef enum { INCREASING, DECREASING } SubarrayType;
+  SubarrayType subarray_type = INCREASING;
+  int start_idx = 0;
+  for (int i = 1; i <= A.size(); ++i) {
+    cout << "i," << i << ",val," << A[i] << endl;
+    if (i == A.size() ||  // A is ended. Adds the last subarray.
+        (A[i - 1] < A[i] && subarray_type == DECREASING) ||
+        (A[i - 1] >= A[i] && subarray_type == INCREASING)) {
+      if (subarray_type == INCREASING) {
+        cout << "INCREASING start_idx," << start_idx << ",i," << i << endl;
+        sorted_subarrays.emplace_back(A.cbegin() + start_idx, A.cbegin() + i);
+      } else {
+        cout << "DECREASING start_idx," << start_idx << ",i," << i << endl;
+        sorted_subarrays.emplace_back(A.crbegin() + A.size() - i,
+                                      A.crbegin() + A.size() - start_idx);
+      }
+      start_idx = i;
+      subarray_type = (subarray_type == INCREASING ? DECREASING : INCREASING);
+    }
+  }
+  return sorted_subarrays;
+}
 
 vector<int> incDec(const vector<int>& input)
 {
    vector<vector<int>> seq;
-   int curIndex=-1;
-   int curSubIndex=-1;
-   enum class dir {unknown,increasing,decreasing};
-   dir dot = dir::unknown;
-   
-   // Decompose the increasing decreasing array into a 2D vector of increasing arrays.
-   for(int i = 0;i<input.size();i++)
-   {
-       if(input[i+1] > input[i]) // increasing
-       {
-        if(dot == dir::increasing){
-        seq.back().emplace_back(input[i]);
-        }
-	else{ // increasing start
-        dot = dir::increasing; 
-        seq.emplace_back();
-        seq.back().emplace_back(input[i]);
-        }
-       }
-       else // decreasing // TBD: How to efficiently insert elements to front of vector ( probably reverse iterators?)
-	// TBD  : Using Deque might be better here
-       {
-	if(dot == dir::decreasing){
-        seq.back().emplace_back(input[i]);
-        }
-        else{ // decreasing start
-        dot = dir::decreasing;
-        seq.emplace_back();
-        seq.back().emplace_back(input[i]);
-        }
-       } 
-   }
-   
-   for(int i = 0;i<seq.size();i++)
-   {
-	for(int j = 0; j < seq[i].size(); j++)
-	{
-		cout << seq[i][j] << " ";
-	}
-	cout << endl;
-   }
-
-
+   seq = SortKIncreasingDecreasingArray(input);
    return mergeSortedSequence(seq);
 }
 
