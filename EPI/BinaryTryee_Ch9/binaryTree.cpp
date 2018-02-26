@@ -6,11 +6,19 @@
 using namespace std;
 
 
+
 template <typename T>
 struct TreeNode
 {
   T data;
   std::unique_ptr<TreeNode<T>> left=nullptr,right=nullptr;
+};
+
+template <typename T>
+struct Status
+{
+ int numNodes;
+ TreeNode<T> *ancestor;
 };
 
 template <typename T>
@@ -30,6 +38,8 @@ void inOrderIterative();
 void preOrderIterative();
 void postOrderIterative();
 bool isSymmetric();
+TreeNode<T>* LCA(T data1, T data2);
+vector<vector<T>> levelOrderTraversal();
 
 std::unique_ptr<TreeNode<T>> root=nullptr; // For the sake of simplicity making this info public
 
@@ -38,7 +48,94 @@ int  heightHelper(const std::unique_ptr<TreeNode<T>>&,int);
 void inOrderHelper(const std::unique_ptr<TreeNode<T>>&);
 void preOrderHelper(const std::unique_ptr<TreeNode<T>>&);
 void postOrderHelper(const std::unique_ptr<TreeNode<T>>&);
+bool isSymmetricHelper(TreeNode<T>* subTree0, TreeNode<T> *subTree1);
+Status<T> LCAHelper(TreeNode<T> *root, T data1, T data2);
 };
+
+template <typename T>
+TreeNode<T>* Tree<T>::LCA(T data1, T data2)
+{
+ Status<T> result = LCAHelper(root.get(),data1,data2);
+ return result.ancestor;
+}
+
+
+// LCA is similar to Post Order Traversal
+template <typename T>
+Status<T> Tree<T>::LCAHelper(TreeNode<T> *root, T data1, T data2)
+{
+  if(!root) { return {0,nullptr};}
+  Status<T> curStatus;
+  curStatus.numNodes = 0;
+  curStatus.ancestor = nullptr;
+  
+  if((root->data == data1) || (root->data == data2))
+  {
+     curStatus.numNodes++;
+  }
+  
+  Status<T> leftStatus = LCAHelper(root->left.get(), data1, data2);
+  if(leftStatus.numNodes == 2)
+  {
+    return leftStatus;
+  }
+
+  Status<T> rightStatus = LCAHelper(root->right.get(), data1, data2);
+  if(rightStatus.numNodes == 2)
+  {
+    return rightStatus;
+  }
+
+  curStatus.numNodes += leftStatus.numNodes + rightStatus.numNodes;
+  if(curStatus.numNodes == 2)
+  {
+    cout << "***FOUND LCA***" << endl;
+    curStatus.ancestor = root;
+  }
+  
+  return curStatus;
+}
+
+template <typename T>
+vector<vector<T>> Tree<T>::levelOrderTraversal()
+{
+ cout << "levelOrderTraversal" << endl;
+ vector<vector<T>> result;
+ queue<TreeNode<T>*> myQ;
+ myQ.emplace(root.get());
+ myQ.emplace(nullptr);
+ int levels = -1;
+ result.emplace_back(); // insert a dummy row to start
+ 
+ while(!myQ.empty())
+ { 
+   if(!myQ.front())
+   {
+     if(myQ.size() != 1){
+     myQ.emplace(nullptr);
+     result.emplace_back();
+     }
+     levels++;
+     cout << "Change level to  " << levels << endl;
+     myQ.pop();
+   }
+   else
+   {
+      TreeNode<T> *temp = myQ.front();
+      cout << "insert " << temp->data << " to result array " << endl;
+      result.back().emplace_back(temp->data);   
+      if(temp->left.get()){
+      myQ.emplace(temp->left.get());
+      }
+      if(temp->right.get()){
+      myQ.emplace(temp->right.get());
+      } 
+      myQ.pop();
+   } 
+ }
+ cout << "levels, " << levels << endl;
+ return result;
+}
 
 // Level order traversal to find an empty place and add the element
 template <typename T>
@@ -235,7 +332,27 @@ bool Tree<T>::isPerfectBinaryTree()
 template <typename T>
 bool Tree<T>::isSymmetric()
 {
+  if(!root) return false; 
+  return isSymmetricHelper(root->left.get(),root->right.get());
+}
 
+template <typename T>
+bool Tree<T>::isSymmetricHelper(TreeNode<T>* subTree0, TreeNode<T> *subTree1)
+{
+
+  if((subTree0 == nullptr) && (subTree1 == nullptr))
+  {
+    return true; 
+  }
+  else if((subTree0 != nullptr) && (subTree1 != nullptr))
+  {
+   if(subTree0->data == subTree1->data)
+   {
+     return ((isSymmetricHelper(subTree0->left.get(),subTree1->right.get())) && (isSymmetricHelper(subTree0->right.get(),subTree1->left.get())));
+   }
+  }
+
+  return false;
 }
 
 
@@ -250,10 +367,38 @@ int main()
  myTree.add(6);
  myTree.add(7);
  myTree.add(8);
+ Tree<int> symmetricTree;
+ symmetricTree.add(1);
+ symmetricTree.add(2);
+ symmetricTree.add(2);
+ symmetricTree.add(4);
+ symmetricTree.add(5);
+ symmetricTree.add(5);
+ symmetricTree.add(4);
  myTree.inOrder();
  myTree.inOrderIterative();
  myTree.preOrder();
  myTree.preOrderIterative();
  myTree.postOrder();
  myTree.height();
+ if(symmetricTree.isSymmetric())
+ {
+  cout << "Tree is symmetric" << endl;
+ }else{
+  cout << "Tree is not symmetric" << endl;
+ }
+ vector<vector<int>> result = myTree.levelOrderTraversal();
+ cout << "LEVEL ORDER TRAVERSAL RESULT" << endl;
+ for(int i = 0;i<result.size();i++)
+ {
+  for(int j = 0;j<result[i].size();j++)
+  {
+	cout << result[i][j] << "," ;
+  }
+  cout << endl;
+ }
+  cout << "FIND LCA " << endl;
+  TreeNode<int> *lca = myTree.LCA(6,7); 
+  cout << "LCA Is " << endl;
+  cout << "LCA node is " << lca->data << endl;
 }
