@@ -5,7 +5,15 @@
 
 using namespace std;
 
+/*
 
+Depth of a Node n : Is the number of nodes from root to  node n, not included node n.
+Height of a Binary Tree : Is the maximum depth of any node in that tree
+Height balanced Binary Tree: A tree is height balanced if the differnence in height between the left and right subtree is atmost 1.
+Complete Binary Tree: Is a tree where every level except the last is completely filled and the nodes are populated from left to right.
+Perfect Binary Tree: Is a tree where all the parents have atleast 2 children and all the leaves are at same level.
+Full Binary Tree: Is a tree where every node has 2 children ( excluding the leaves)
+*/
 
 template <typename T>
 struct TreeNode
@@ -18,7 +26,13 @@ template <typename T>
 struct Status
 {
  int numNodes;
- TreeNode<T> *ancestor;
+ TreeNode<T>* ancestor;
+};
+
+struct bStatus
+{
+ int depth;
+ bool balanced;
 };
 
 template <typename T>
@@ -29,7 +43,7 @@ void add(T val);
 void remove(T val);
 int height();
 int depthOfNode(T val);
-bool isBalanced();
+bool isheightBalanced();
 bool isPerfectBinaryTree();
 void inOrder();
 void preOrder();
@@ -40,6 +54,7 @@ void postOrderIterative();
 bool isSymmetric();
 TreeNode<T>* LCA(T data1, T data2);
 vector<vector<T>> levelOrderTraversal();
+int sumRootToLeafBinary(); // Only applicable if the nodes of a tree are 0 or 1 and root is the MSB 
 
 std::unique_ptr<TreeNode<T>> root=nullptr; // For the sake of simplicity making this info public
 
@@ -49,48 +64,80 @@ void inOrderHelper(const std::unique_ptr<TreeNode<T>>&);
 void preOrderHelper(const std::unique_ptr<TreeNode<T>>&);
 void postOrderHelper(const std::unique_ptr<TreeNode<T>>&);
 bool isSymmetricHelper(TreeNode<T>* subTree0, TreeNode<T> *subTree1);
-Status<T> LCAHelper(TreeNode<T> *root, T data1, T data2);
+Status<T> LCAHelper(const std::unique_ptr<TreeNode<T>> &root, T data1, T data2);
+bStatus isheightBalancedHelper(const std::unique_ptr<TreeNode<T>> &curNode,int depth);
+int sumRootToLeafBinaryHelper(const std::unique_ptr<TreeNode<T>> &curNode, int sum);
 };
+
+template <typename T>
+int Tree<T>::sumRootToLeafBinary()
+{
+  return sumRootToLeafBinaryHelper(root,0);
+}
+
+template <typename T>
+int Tree<T>::sumRootToLeafBinaryHelper(const std::unique_ptr<TreeNode<T>> &curNode, int sum)
+{
+  int tempSum = 0;
+  if(!curNode) return 0;
+
+  tempSum = sum*2 + curNode->data;
+ 
+  if(!curNode->left && !curNode->right) // Leaf Node
+  {
+     return tempSum;
+  }
+ 
+  int leftSum = sumRootToLeafBinaryHelper(curNode->left,tempSum);  
+  int rightSum = sumRootToLeafBinaryHelper(curNode->right,tempSum);  
+  return (leftSum + rightSum);
+}
+
+// Similar to Post Order Traversal
+// Time Complexity : O(n)
+// Space Complexity : O(h), height of the tree
 
 template <typename T>
 TreeNode<T>* Tree<T>::LCA(T data1, T data2)
 {
- Status<T> result = LCAHelper(root.get(),data1,data2);
+ Status<T> result = LCAHelper(root,data1,data2);
  return result.ancestor;
 }
 
 
 // LCA is similar to Post Order Traversal
 template <typename T>
-Status<T> Tree<T>::LCAHelper(TreeNode<T> *root, T data1, T data2)
+Status<T> Tree<T>::LCAHelper(const std::unique_ptr<TreeNode<T>> &root, T data1, T data2)
 {
-  if(!root) { return {0,nullptr};}
   Status<T> curStatus;
   curStatus.numNodes = 0;
   curStatus.ancestor = nullptr;
+
+  if(!root) { return curStatus;}
   
-  if((root->data == data1) || (root->data == data2))
-  {
-     curStatus.numNodes++;
-  }
   
-  Status<T> leftStatus = LCAHelper(root->left.get(), data1, data2);
+  Status<T> leftStatus = LCAHelper(root->left, data1, data2);
   if(leftStatus.numNodes == 2)
   {
     return leftStatus;
   }
 
-  Status<T> rightStatus = LCAHelper(root->right.get(), data1, data2);
+  Status<T> rightStatus = LCAHelper(root->right, data1, data2);
   if(rightStatus.numNodes == 2)
   {
     return rightStatus;
+  }
+
+  if((root->data == data1) || (root->data == data2))
+  {
+     curStatus.numNodes++;
   }
 
   curStatus.numNodes += leftStatus.numNodes + rightStatus.numNodes;
   if(curStatus.numNodes == 2)
   {
     cout << "***FOUND LCA***" << endl;
-    curStatus.ancestor = root;
+    curStatus.ancestor = root.get();
   }
   
   return curStatus;
@@ -317,11 +364,49 @@ int Tree<T>::depthOfNode(T val)
 
 }
 
+// Similar to Post Order Traversal
+// Time Complexity : O(n)
+// Space Complexity : O(h), height of the tree
 template <typename T>
-bool Tree<T>::isBalanced()
+bool Tree<T>::isheightBalanced()
 {
-
+  bStatus status =  isheightBalancedHelper(root,-1);
+  cout << "height, " <<  status.depth;
+  return status.balanced;
+  
 }
+
+template <typename T>
+bStatus Tree<T>::isheightBalancedHelper(const std::unique_ptr<TreeNode<T>> &curNode,int depth)
+{
+  bStatus curStatus;
+  curStatus.balanced = true;
+  curStatus.depth = depth;
+ 
+  if(!curNode)
+  {
+      return curStatus;
+  }
+
+  depth++;
+ 
+  bStatus leftStatus  = isheightBalancedHelper(curNode->left, depth);
+  if(!leftStatus.balanced){
+   return leftStatus;
+  }
+  bStatus rightStatus = isheightBalancedHelper(curNode->right, depth);
+
+  if(!rightStatus.balanced){
+   return rightStatus;
+  }
+  
+  curStatus.balanced = (abs(leftStatus.depth - rightStatus.depth) > 1)? false:true; 
+  curStatus.depth = (leftStatus.depth>rightStatus.depth)?leftStatus.depth:rightStatus.depth;
+
+  return curStatus;
+}
+
+
 
 template <typename T>
 bool Tree<T>::isPerfectBinaryTree()
@@ -381,6 +466,15 @@ int main()
  myTree.preOrderIterative();
  myTree.postOrder();
  myTree.height();
+ if(myTree.isheightBalanced())
+ {
+  cout << "Tree is height balanced" << endl;
+ }
+ else
+ {
+  cout << "Tree is not height balanced" << endl;
+ } 
+ 
  if(symmetricTree.isSymmetric())
  {
   cout << "Tree is symmetric" << endl;
@@ -398,7 +492,17 @@ int main()
   cout << endl;
  }
   cout << "FIND LCA " << endl;
-  TreeNode<int> *lca = myTree.LCA(6,7); 
+  TreeNode<int>* lca = myTree.LCA(6,7); 
   cout << "LCA Is " << endl;
   cout << "LCA node is " << lca->data << endl;
+  Tree<int> binarySumTree;
+  binarySumTree.add(1);
+  binarySumTree.add(0);
+  binarySumTree.add(0);
+  binarySumTree.add(0);
+  binarySumTree.add(1);
+  binarySumTree.add(0);
+  binarySumTree.add(1);
+  cout << "Binary SUM, " << binarySumTree.sumRootToLeafBinary();
+
 }

@@ -50,6 +50,18 @@ Stack & Queue Chapter 8
 2) Implement Stack with Max, key is to store max along with data. To further improve space complexity, you can have an additional stack to store the max.
 
 
+BinaryTree
+=========
+Depth of a Node n : Is the number of nodes from root to  node n, not included node n.
+Height of a Binary Tree : Is the maximum depth of any node in that tree
+Height balanced Binary Tree: A tree is height balanced if the differnence in height between the left and right subtree is atmost 1.
+Complete Binary Tree: Is a tree where every level except the last is completely filled and the nodes are populated from left to right.
+Perfect Binary Tree: Is a tree where all the parents have atleast 2 children and all the leaves are at same level.
+Full Binary Tree: Is a tree where every node has 2 children ( excluding the leaves)
+
+1) LCA, heightBalanced Check are both similar to Post Order Traversal.
+2) LCA with Parent: Trick is to reduce the problem down to 2 nodes at same depth
+
 
 
 HashTable
