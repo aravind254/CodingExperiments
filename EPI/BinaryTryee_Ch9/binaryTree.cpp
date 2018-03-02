@@ -6,7 +6,6 @@
 using namespace std;
 
 /*
-
 Depth of a Node n : Is the number of nodes from root to  node n, not included node n.
 Height of a Binary Tree : Is the maximum depth of any node in that tree
 Height balanced Binary Tree: A tree is height balanced if the differnence in height between the left and right subtree is atmost 1.
@@ -40,6 +39,8 @@ class Tree
 {
 public:
 void add(T val);
+void addToLeft(T val);
+void addToright(T val);
 void remove(T val);
 int height();
 int depthOfNode(T val);
@@ -52,6 +53,7 @@ void inOrderIterative();
 void preOrderIterative();
 void postOrderIterative();
 bool isSymmetric();
+bool isSumPresentFromRootToLeaf(int targetSum);
 TreeNode<T>* LCA(T data1, T data2);
 vector<vector<T>> levelOrderTraversal();
 int sumRootToLeafBinary(); // Only applicable if the nodes of a tree are 0 or 1 and root is the MSB 
@@ -67,7 +69,40 @@ bool isSymmetricHelper(TreeNode<T>* subTree0, TreeNode<T> *subTree1);
 Status<T> LCAHelper(const std::unique_ptr<TreeNode<T>> &root, T data1, T data2);
 bStatus isheightBalancedHelper(const std::unique_ptr<TreeNode<T>> &curNode,int depth);
 int sumRootToLeafBinaryHelper(const std::unique_ptr<TreeNode<T>> &curNode, int sum);
+bool isSumPresentFromRootToLeafHelper(const std::unique_ptr<TreeNode<T>> &curNode, int targetSum, int prevSum);
 };
+
+template <typename T>
+bool Tree<T>::isSumPresentFromRootToLeaf(int targetSum)
+{
+  return isSumPresentFromRootToLeafHelper(root,targetSum,0);
+}
+
+template <typename T>
+bool Tree<T>::isSumPresentFromRootToLeafHelper(const std::unique_ptr<TreeNode<T>> &curNode, int targetSum, int prevSum)
+{
+  if(curNode == nullptr) { return false; }
+  
+  int tempSum = prevSum + curNode->data;
+ 
+  // Leaf Node
+  if((curNode->left == nullptr) && (curNode->right == nullptr))
+  {
+      return (tempSum == targetSum);
+  }
+
+  if(isSumPresentFromRootToLeafHelper(curNode->left,targetSum,tempSum))
+  {
+  return true; 
+  }
+ 
+  if(isSumPresentFromRootToLeafHelper(curNode->right,targetSum,tempSum))
+  {
+  return true;
+  }
+
+  return false;
+}
 
 template <typename T>
 int Tree<T>::sumRootToLeafBinary()
@@ -183,6 +218,17 @@ vector<vector<T>> Tree<T>::levelOrderTraversal()
  cout << "levels, " << levels << endl;
  return result;
 }
+
+template <typename T>
+void addToLeft(T val)
+{
+}
+
+template <typename T>
+void addToright(T val)
+{
+}
+
 
 // Level order traversal to find an empty place and add the element
 template <typename T>
@@ -465,6 +511,7 @@ int main()
  myTree.preOrder();
  myTree.preOrderIterative();
  myTree.postOrder();
+ cout << "Is Sum 15 present result, " << myTree.isSumPresentFromRootToLeaf(15) << endl;;
  myTree.height();
  if(myTree.isheightBalanced())
  {
@@ -504,5 +551,4 @@ int main()
   binarySumTree.add(0);
   binarySumTree.add(1);
   cout << "Binary SUM, " << binarySumTree.sumRootToLeafBinary();
-
 }
