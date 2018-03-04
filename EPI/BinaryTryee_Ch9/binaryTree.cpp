@@ -2,6 +2,7 @@
 #include<memory>
 #include<queue>
 #include<stack>
+#include<vector>
 
 using namespace std;
 
@@ -19,6 +20,7 @@ struct TreeNode
 {
   T data;
   std::unique_ptr<TreeNode<T>> left=nullptr,right=nullptr;
+  TreeNode<T> *next=nullptr; // Used for right sibling tree problem
 };
 
 template <typename T>
@@ -57,6 +59,10 @@ bool isSumPresentFromRootToLeaf(int targetSum);
 TreeNode<T>* LCA(T data1, T data2);
 vector<vector<T>> levelOrderTraversal();
 int sumRootToLeafBinary(); // Only applicable if the nodes of a tree are 0 or 1 and root is the MSB 
+vector<T> formLLfromLeaves();
+vector<T> traverseExterior();
+void computeRightSiblingTree(); // Right Sibling Tree Implementation for Perfect Binary Tree
+void traverseRightSiblingTreeLevelbyLevel();
 
 std::unique_ptr<TreeNode<T>> root=nullptr; // For the sake of simplicity making this info public
 
@@ -70,7 +76,150 @@ Status<T> LCAHelper(const std::unique_ptr<TreeNode<T>> &root, T data1, T data2);
 bStatus isheightBalancedHelper(const std::unique_ptr<TreeNode<T>> &curNode,int depth);
 int sumRootToLeafBinaryHelper(const std::unique_ptr<TreeNode<T>> &curNode, int sum);
 bool isSumPresentFromRootToLeafHelper(const std::unique_ptr<TreeNode<T>> &curNode, int targetSum, int prevSum);
+void formLLfromLeavesHelper(std::unique_ptr<TreeNode<T>>& curNode, vector<T>& result);
+void traverseExteriorHelper(vector<T>& result);
+void getLeftandLeafNodes(std::unique_ptr<TreeNode<T>>& curNode,vector<T>& result,bool* reachedLeftMostPtr);
+void getRightNodesExcludingLeaf(std::unique_ptr<TreeNode<T>>& curNode,vector<T>& result);
 };
+
+// Time Complexity  : O(n)
+// Space Complexity : O(1)
+
+/*Right Sibling Tree Implementation for Perfect Binary Tree*/
+template <typename T>
+void Tree<T>::computeRightSiblingTree()
+{
+   TreeNode<T> *curNode = root.get();
+   TreeNode<T> *curNext = nullptr;
+   cout << "computeRightSiblingTree" << endl;
+   while(curNode->left)
+   {
+      curNext = curNode;
+      while(curNext) 
+      {
+	  curNext->left->next = curNext->right.get();
+          if(curNext->next == nullptr)
+          {
+              break;
+          }
+          curNext->right->next =  curNext->next->left.get();
+          curNext = curNext->next;
+      };
+      cout << endl;
+      curNode = curNode->left.get();       
+   }
+}
+
+template <typename T>
+void Tree<T>::traverseRightSiblingTreeLevelbyLevel()
+{
+  TreeNode<T> *curNode = root.get();
+  TreeNode<T>* curNext = nullptr;
+  int level = 0;
+  cout << "traverseRightSiblingTreeLevelbyLevel" << endl;
+  while(curNode)
+  {
+     curNext = curNode;
+     cout << "level," << level << " ";
+     while(curNext) 
+     {
+          cout << curNext->data << ","; 
+          curNext = curNext->next;
+      };  
+      cout << endl;
+      curNode = curNode->left.get();
+      level++;
+   }
+}
+
+template <typename T>
+vector<T> Tree<T>::traverseExterior()
+{
+ vector<T> result;
+ traverseExteriorHelper(result);
+ return result;
+}
+
+template <typename T>
+void Tree<T>::traverseExteriorHelper(vector<T>& result)
+{
+   // Push root node to result
+   result.emplace_back(root->data);
+   // Get LeftMost Nodes & Leaf Nodes
+   bool reachedLeftMost = false;
+   getLeftandLeafNodes(root,result,&reachedLeftMost);
+   // Get RightMost Nodes
+   getRightNodesExcludingLeaf(root,result);
+}
+
+template <typename T>
+void Tree<T>::getLeftandLeafNodes(std::unique_ptr<TreeNode<T>>& curNode,vector<T>& result,bool* reachedLeftMostPtr)
+{
+  if(!curNode) return;
+  bool &reachedLeftMost = *reachedLeftMostPtr;
+  if(!reachedLeftMost)
+  {
+	  if(curNode->left) 
+	  {
+            cout << "LEFT " << curNode->left->data << endl;
+	    result.emplace_back(curNode->left->data);
+	  }
+	  else
+	  {
+	    reachedLeftMost = true;
+	  }
+  }
+  else if((curNode->left == nullptr) && (curNode->right == nullptr))
+  {
+     cout << "LEAF " << curNode->data << endl;
+    result.emplace_back(curNode->data);
+    return;
+  }
+
+  getLeftandLeafNodes(curNode->left,result,reachedLeftMostPtr);
+  getLeftandLeafNodes(curNode->right,result,reachedLeftMostPtr);
+}
+
+template <typename T>
+void Tree<T>::getRightNodesExcludingLeaf(std::unique_ptr<TreeNode<T>>& curNode,vector<T>& result)
+{ 
+  if(!curNode) return;
+ 
+  if(curNode->right)
+  {
+     result.emplace_back(curNode->right->data);
+     getRightNodesExcludingLeaf(curNode->right,result);
+  }
+  else if(curNode->left == nullptr) // leaf Node
+  {
+     result.pop_back();
+  }
+}
+
+
+
+template <typename T>
+vector<T> Tree<T>::formLLfromLeaves()
+{
+     vector<T> result;
+     formLLfromLeavesHelper(root,result);
+     return result;
+}
+
+template <typename T>
+void Tree<T>::formLLfromLeavesHelper(std::unique_ptr<TreeNode<T>>& curNode, vector<T>& result)
+{
+   if(!curNode) return;
+   
+   // Leaf Node
+   if((curNode->left == nullptr) && (curNode->right == nullptr))
+   { 
+       result.emplace_back(curNode->data);
+       return;
+   }
+  formLLfromLeavesHelper(curNode->left,result);
+  formLLfromLeavesHelper(curNode->right,result);
+}
 
 template <typename T>
 bool Tree<T>::isSumPresentFromRootToLeaf(int targetSum)
@@ -497,7 +646,7 @@ int main()
  myTree.add(1);
  myTree.add(6);
  myTree.add(7);
- myTree.add(8);
+ //myTree.add(8);
  Tree<int> symmetricTree;
  symmetricTree.add(1);
  symmetricTree.add(2);
@@ -542,6 +691,26 @@ int main()
   TreeNode<int>* lca = myTree.LCA(6,7); 
   cout << "LCA Is " << endl;
   cout << "LCA node is " << lca->data << endl;
+
+  vector<int> result1 = myTree.formLLfromLeaves();
+  cout << "**LEAF NODES** " ;
+  for(int i = 0;i<result1.size();i++)
+  {
+     cout << result1[i] << ",";
+  }
+  cout << endl;
+
+  vector<int> exterior  = myTree.traverseExterior();
+  cout << "**EXTERIOR** " ;
+  for(int i = 0;i<exterior.size();i++)
+  {
+     cout << exterior[i] << ",";
+  }
+  cout << endl;
+
+  myTree.computeRightSiblingTree();
+  myTree.traverseRightSiblingTreeLevelbyLevel(); 
+
   Tree<int> binarySumTree;
   binarySumTree.add(1);
   binarySumTree.add(0);
