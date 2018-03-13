@@ -61,7 +61,8 @@ vector<vector<T>> levelOrderTraversal();
 int sumRootToLeafBinary(); // Only applicable if the nodes of a tree are 0 or 1 and root is the MSB 
 vector<T> formLLfromLeaves();
 vector<T> traverseExterior();
-void computeRightSiblingTree(); // Right Sibling Tree Implementation for Perfect Binary Tree
+void computeRightSiblingTreePerfectBinaryTree(); // Right Sibling Tree Implementation for Perfect Binary Tree
+void computeRightSiblingTree(); // Right Sibling Tree Implementation for any Binary Tree
 void traverseRightSiblingTreeLevelbyLevel();
 
 std::unique_ptr<TreeNode<T>> root=nullptr; // For the sake of simplicity making this info public
@@ -82,16 +83,31 @@ void getLeftandLeafNodes(std::unique_ptr<TreeNode<T>>& curNode,vector<T>& result
 void getRightNodesExcludingLeaf(std::unique_ptr<TreeNode<T>>& curNode,vector<T>& result);
 };
 
+
+// Time Complexity  : O(n)
+// Space Complexity : O(n)
+
+template <typename T>
+void Tree<T>::computeRightSiblingTree()
+{
+ std::queue<std::unique_ptr<TreeNode<T>&>> myQ;
+ myQ.emplace_back(root);
+ 
+  
+
+}
+
+
 // Time Complexity  : O(n)
 // Space Complexity : O(1)
 
 /*Right Sibling Tree Implementation for Perfect Binary Tree*/
 template <typename T>
-void Tree<T>::computeRightSiblingTree()
+void Tree<T>::computeRightSiblingTreePerfectBinaryTree()
 {
    TreeNode<T> *curNode = root.get();
    TreeNode<T> *curNext = nullptr;
-   cout << "computeRightSiblingTree" << endl;
+   cout << "computeRightSiblingTreePerfectBinaryTree" << endl;
    while(curNode->left)
    {
       curNext = curNode;
@@ -708,7 +724,7 @@ int main()
   }
   cout << endl;
 
-  myTree.computeRightSiblingTree();
+  myTree.computeRightSiblingTreePerfectBinaryTree();
   myTree.traverseRightSiblingTreeLevelbyLevel(); 
 
   Tree<int> binarySumTree;
