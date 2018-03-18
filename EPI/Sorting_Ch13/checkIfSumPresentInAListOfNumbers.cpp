@@ -10,30 +10,43 @@ struct Result
  bool found = false;
 };
 
-// TimeComplexity : O(nlogn)
+Result findSumPresentInAGivenListOfNumbersOptimized(std::vector<int> input,int sum)
+{
+  int start = 0, end = input.size()-1;
+  int targetSum = sum;
+  std::sort(input.begin(),input.end());
+  
+}
 
+// TimeComplexity : O(n^2)
 Result findSumPresentInAGivenListOfNumbers(std::vector<int> input,int sum)
 {
  Result output;
- std::sort(input.begin(),input.end());
  int curIndex = input.size() - 1;
+ int start = input.size() - 1;
  int partialSum = sum;
- while((curIndex>=0) && (partialSum)) 
+ while(start >=0)
  {
+   curIndex = start;
+   partialSum = sum;
+   output.result = {};
+   while((curIndex>=0) && (partialSum)) 
+   {
      if(input[curIndex] > partialSum){ curIndex--;}
      else if(input[curIndex] <= partialSum)  {
 	 partialSum -= input[curIndex];
          output.result.emplace_back(input[curIndex]);
 	 curIndex--;
-     }
- }
+      }
+   }
 
- if(partialSum == 0){
- output.found = true;
+   if(partialSum == 0){
+      output.found = true;
+      break;
+   }
+   start--;
  }
- 
  return output;
-
 }
 
 int main()
