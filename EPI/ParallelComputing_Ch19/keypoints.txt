@@ -1,4 +1,4 @@
-Key Concetps to Know
+Key Concepts to Know
 ======================
 1) Reentrant, Thread Safe
 2) Priority inversion,Priority inheritance
@@ -49,7 +49,18 @@ Note that with a binary semaphore, it is OK for B to take the semaphore and A to
 Again, a binary semaphore is NOT protecting a resource from access. The act of Giving and Taking a semaphore are fundamentally decoupled.
 It typically makes little sense for the same task to so a give and a take on the same binary semaphore.
 
+Priority Inversion
+====================
+Task H, Task M, Task L
+H>M>L
 
+1) L is running but not in CS ; H needs to run; H preempts L ; H starts running ; H relinquishes or releases control ; L resumes and starts running
+2) L is running in CS ; H needs to run but not in CS; H preempts L ; H starts running ; H relinquishes control ; L resumes and starts running.
+3) L is running in CS ; H also needs to run in CS ; H waits for L to come out of CS ; L comes out of CS ; H enters CS and starts running
 
+Please note that the above scenarios don’t show the problem of any Priority Inversion (not even scenario 3). Basically, so long as lower priority task isn’t running in shared CS, higher priority task can preempt it. But if L is running in shared CS and H also needs to run in CS, H waits until L comes out of CS. The idea is that CS should be small enough so that it doesn’t result in H waiting for long time while L was in CS. That’s why writing CS code requires careful consideration. In any of the above scenarios, priority inversion (i.e. reversal of priority) didn’t occur because the tasks are running as per the design.
 
+4) L is running in CS ; H also needs to run in CS ; H waits for L to come out of CS ; M interrupts L and starts running ; M runs till completion and relinquishes control ; L resumes and starts running till the end of CS ; H enters CS and starts running.
+Note that neither L nor H share CS with M.
 
+One of the solution for this problem is Priority Inheritance. In Priority Inheritance, when L is in critical section, L inherits priority of H at the time when H starts pending for critical section. By doing so, M doesn’t interrupt L and H doesn’t wait for M to finish. Please note that inheriting of priority is done temporarily i.e. L goes back to its old priority when L comes out of critical section

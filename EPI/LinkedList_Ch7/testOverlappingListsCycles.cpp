@@ -96,7 +96,7 @@ bool testOverlappingListsCycle(LL<int>& l1, const LL<int>& l2)
         return true; 
          
      }
-     else
+     else // This may not be correct, end of cycle don't have to match for the list to overlap
      {
 	cout << "Lists don't overlap" << endl;
      }

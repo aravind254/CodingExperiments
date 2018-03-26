@@ -58,6 +58,6 @@ int main()
  myList.add(4);
  myList.add(5);
  myList.print();
- cyclicShift(myList,5);
+ cyclicShift(myList,4);
  myList.print();
 }

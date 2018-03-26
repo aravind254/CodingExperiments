@@ -543,6 +543,7 @@ template <typename T>
 void Tree<T>::postOrderIterative()
 {  
     cout << "postOrderIterative" << endl;
+    // Use a stack with StackElement {TreeNode, bool leftVisited, bool rightVisited}
 
 }
 
