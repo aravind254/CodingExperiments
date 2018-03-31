@@ -42,19 +42,8 @@ void writerFunc()
  while(count)
  { 
   unique_lock<mutex> wlock(wmx);
-  while(1)
-  {
   unique_lock<mutex> rlock(rmx);
-  if(rCount){
-  cout <<  "**Wcheck**Reader Count Not 0" << endl;
-  rVar.wait(rlock);
-  }
-  else{
-  cout << "Reader count reached 0" << endl;
-  break;
-  } 
-  }
-
+  rVar.wait(rlock,[]{return (rCount==0);});
   cout << "Writer Work thread_id = " << this_thread::get_id() <<  "count = " << count << endl;
   count--;
  }  

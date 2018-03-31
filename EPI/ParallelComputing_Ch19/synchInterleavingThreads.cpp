@@ -19,15 +19,14 @@ void oddThreadFunc()
    for(int i = 1;i<100;i+=2)
    {
       unique_lock<mutex> lock(mx);
-      if(turn == Turn::EVEN){
-       cVar.wait(lock);
-      }
-      else
-      {
-          cout << i << endl;
-          turn = Turn::EVEN;
-          cVar.notify_one();
-      }
+      cout << "oddThreadFunc,i," << i << endl;
+      cVar.wait(lock,[]{return (turn == Turn::ODD);});
+      cout << "Odd Got Lock" << endl;
+      cout << i << endl;
+      turn = Turn::EVEN;
+      lock.unlock();
+      cout << "Odd Releases the lock" << endl;
+      cVar.notify_one();
    }
 }
 
@@ -36,15 +35,14 @@ void evenThreadFunc()
    for(int i = 2;i<=100;i+=2)
    {
       unique_lock<mutex> lock(mx);
-      if(turn == Turn::ODD){
-       cVar.wait(lock);
-      }
-      else
-      {
-          cout << i << endl;
-          turn = Turn::ODD;
-          cVar.notify_one();
-      }
+      cout << "evenThreadFunc,i," << i << endl;
+      cVar.wait(lock,[]{return (turn == Turn::EVEN);});
+      cout << "Even Got Lock" << endl;
+      cout << i << endl;
+      turn = Turn::ODD;
+      lock.unlock();
+      cout << "Even Releases the lock" << endl;
+      cVar.notify_one();
    }
 } 
 
