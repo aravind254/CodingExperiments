@@ -22,6 +22,10 @@ class BST
  void deleteNode(int);
  bool isValid();
  bool isValidUsingBFS();
+ int firstKeyGreaterThanValue(int);
+ vector<int> findKLargestElements(int);
+ Node* LCA(int,int);
+ Node* LCAIterative(int k, int j);
 
  private:
  Node *root = nullptr;
@@ -31,8 +35,114 @@ class BST
  Node* minValueNode(Node*);
  bool isValidHelper(Node*,int,int);
  bool isValidUsingBFSHelper(Node*,int,int);
- 
+ int firstKeyGreaterThanValueHelper(Node*,int);
+ void findKLargestElementsHelper(Node*,int,vector<int>&);
+ Node* LCAHelper(Node*,int,int);
+ Node* LCAIterativeHelper(Node*,int,int);
 };
+
+// Time Complexity : O(h)
+// Space Complexity : O(1)
+// Assumption: Both k & j are present in the BST 
+Node* BST::LCAIterative(int k, int j)
+{
+   return LCAIterativeHelper(root,k,j);
+}
+
+Node* BST::LCAIterativeHelper(Node *cur,int k, int j)
+{
+  while(cur != nullptr)
+  {
+	  if((k < cur->data) &&  (j < cur->data))
+	  {
+	    cur = cur->left;
+	  } 
+	  else if((k > cur->data) && (j > cur->data))
+	  {  
+	    cur = cur->right;
+	  }
+          else
+          {
+             break;
+          }
+  }
+  return cur;
+}
+
+// Time Complexity : O(h)
+// Space Complexity : O(h)
+// Assumption: Both k & j are present in the BST 
+Node* BST::LCA(int k, int j)
+{
+  return LCAHelper(root,k,j);
+}
+
+// TimeComplexity : O(h)
+// SpaceCompleixity : O(h)
+Node* BST::LCAHelper(Node* cur, int k, int j)
+{
+  if(nullptr == cur)
+  {
+    return nullptr;
+  }
+
+  if((k < cur->data) &&  (j < cur->data))
+  {
+    return LCAHelper(cur->left,k,j);
+  } 
+  else if((k > cur->data) && (j > cur->data))
+  {  
+    return LCAHelper(cur->right,k,j);
+  }
+
+  return cur; 
+}
+
+
+// Time Complexity : O(height of tree + k)
+vector<int> BST::findKLargestElements(int k)
+{
+  vector<int> result;
+  findKLargestElementsHelper(root,k,result); 
+  return result;
+}
+
+void BST::findKLargestElementsHelper(Node* cur,int k,vector<int> &result)
+{
+    if((nullptr == cur) || (result.size() >= k) ) {
+    return;
+    }
+    
+    findKLargestElementsHelper(cur->right,k,result);
+    if(result.size() < k)
+    {
+        result.emplace_back(cur->data);
+    }
+    findKLargestElementsHelper(cur->left,k,result);
+}
+
+int BST::firstKeyGreaterThanValue(int k)
+{
+ return firstKeyGreaterThanValueHelper(root,k);
+}
+
+int BST::firstKeyGreaterThanValueHelper(Node *cur,int k)
+{
+  static int greaterSoFar = -1;
+  if(nullptr == cur){
+  return greaterSoFar;
+  }
+  if(k < cur->data){
+      greaterSoFar = cur->data;
+      return firstKeyGreaterThanValueHelper(cur->left,k);
+  }
+  else
+  {
+     return firstKeyGreaterThanValueHelper(cur->right,k);
+  }
+}
+
+
 
 bool BST::isValidHelper(Node *cur,int min,int max)
 {
@@ -235,6 +345,23 @@ int main()
   bst.add(20);
   cout << "BST isValid, " << bst.isValid() << endl;
   cout << "BST isValidUsingBFS, " << bst.isValidUsingBFS() << endl;
+
+  cout << "firstKeyGreaterThanValue 11, " <<  bst.firstKeyGreaterThanValue(11) << endl;
+  cout << "firstKeyGreaterThanValue 3, " << bst.firstKeyGreaterThanValue(3) << endl;
+
+  vector<int> result = bst.findKLargestElements(8);
+  cout << "findKLargestElements k = 8 ";
+  for(int s : result)
+  {
+    cout << s << ",";
+  }
+  cout << endl;
+
+  Node *lca1 = bst.LCAIterative(12,20);
+  Node *lca2 = bst.LCA(12,20);
+  cout << "lca1 " << lca1->data<< endl;
+  cout << "lca2 " << lca2->data<< endl;
+
   bst.inOrder();
   bst.deleteNode(2);
   bst.inOrder();
@@ -242,5 +369,7 @@ int main()
   bst.inOrder();
   bst.deleteNode(10);
   bst.inOrder();
+
+
   
 }
