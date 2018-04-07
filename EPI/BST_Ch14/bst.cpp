@@ -26,6 +26,7 @@ class BST
  vector<int> findKLargestElements(int);
  Node* LCA(int,int);
  Node* LCAIterative(int k, int j);
+ vector<int> rangeLookUp(int left,int right);
 
  private:
  Node *root = nullptr;
@@ -39,7 +40,42 @@ class BST
  void findKLargestElementsHelper(Node*,int,vector<int>&);
  Node* LCAHelper(Node*,int,int);
  Node* LCAIterativeHelper(Node*,int,int);
+ void rangeLookUpHelper(Node*,int,int,vector<int>&);
 };
+
+vector<int> BST::rangeLookUp(int left, int right)
+{
+   cout << "rangeLookUp left," << left << ",right," << right << endl;
+   vector<int> result;
+   rangeLookUpHelper(root,left,right,result);
+   return result;
+}
+
+// Time Complexity : O(h + m), m is the number of nodes in the interval, h is the height of the tree
+// Time Complexity can be improved further, if each node had the number of nodes with itself as root stored in it. 
+void BST::rangeLookUpHelper(Node* cur,int left,int right,vector<int> &result)
+{
+    if(nullptr == cur)
+    {
+       return;
+    }
+
+    if((cur->data >= left) && (cur->data <= right))
+    {
+      // In Range
+      rangeLookUpHelper(cur->left,left,right,result);
+      result.emplace_back(cur->data);
+      rangeLookUpHelper(cur->right,left,right,result); 
+    }
+    else if(cur->data < left)
+    {
+       rangeLookUpHelper(cur->right,left,right,result);      
+    }
+    else if(cur->data > right)
+    {
+        rangeLookUpHelper(cur->left,left,right,result);
+    }
+}
 
 // Time Complexity : O(h)
 // Space Complexity : O(1)
@@ -343,6 +379,13 @@ int main()
   bst.add(15);
   bst.add(12);
   bst.add(20);
+  vector<int> range = bst.rangeLookUp(1,6);
+  for(int s : range)
+  {
+    cout << s << ",";
+  }
+  cout << endl;
+
   cout << "BST isValid, " << bst.isValid() << endl;
   cout << "BST isValidUsingBFS, " << bst.isValidUsingBFS() << endl;
 
