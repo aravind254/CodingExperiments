@@ -40,7 +40,7 @@ int main()
   //Dog dogObj2       = dynamic_cast<Dog>(yellowDogObj); //Compiler Error, Dog is not a reference or Pointer
   Dog *dogObj2 =  dynamic_cast<Dog*>(&yellowDogObj); // Object Slicing
   dogObj2->test();
-  YellowDog *dogObj3 = dynamic_cast<YellowDog*>(&dogObj); // Dog may or may not be YellowDog, so compilation fails
+  YellowDog *dogObj3 = dynamic_cast<YellowDog*>(&dogObj);
   if(!dogObj3)
   {
    cout << "dogObj3 is null" << endl;
