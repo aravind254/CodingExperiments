@@ -4,7 +4,7 @@ using namespace std;
 class Animal
 {
  public:
- int a=10, b=12;
+ int a=10, b=13;
  void M1() { cout << "Animal::M1" << a << endl;}
  void M2() { cout << "Animal::M2" << a << endl;}
  void M3() { cout << "Animal::M3" << b << endl;}
